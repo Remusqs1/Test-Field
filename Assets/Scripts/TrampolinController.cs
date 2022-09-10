@@ -16,6 +16,7 @@ public class TrampolinController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        //TODO Bug - Si se aproximas al trampolin desde un costado el impulso es mayor al que debería
         if (collision.tag == "Player")
         {
             var playerRigidBody = collision.gameObject.GetComponent<Rigidbody2D>();

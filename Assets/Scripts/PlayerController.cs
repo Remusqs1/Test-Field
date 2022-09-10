@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     CapsuleCollider2D playerBoxCollider;
     bool facingRight = true;
-
+    float originalSpeed;
     [SerializeField] public LayerMask groundMask;
     #endregion
 
@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerBoxCollider = GetComponent<CapsuleCollider2D>();
+        originalSpeed = currentSpeed;
     }
 
     // Start is called before the first frame update
@@ -45,6 +46,14 @@ public class PlayerController : MonoBehaviour
             if (currentSpeed > maxSpeed)
             {
                 currentSpeed = maxSpeed;
+            }
+        }
+        else
+        {
+            currentSpeed -= (acceleration * acceleration) * Time.deltaTime;
+            if (currentSpeed < originalSpeed)
+            {
+                currentSpeed = originalSpeed;
             }
         }
         animator.SetBool("isJumping", !isTouchingTheGround());
@@ -72,7 +81,11 @@ public class PlayerController : MonoBehaviour
 
 
         if (playerRigidbody.velocity.x != 0) animator.SetBool("isRunning", true);
-        else animator.SetBool("isRunning", false);
+        else
+        {
+            animator.SetBool("isRunning", false);
+
+        }
         if (Input.GetAxisRaw("Horizontal") > 0 && !facingRight || Input.GetAxisRaw("Horizontal") < 0 && facingRight) Flip();
     }
 
