@@ -4,8 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Item_Cherry
   - Cherry
+  - Cherry_Clone
+  - Trampolin_Clone
   layers:
   - Default
   - TransparentFX

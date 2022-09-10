@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dcd5f871375b0543a9df0f4dce542f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  impulseForce: 20
+  impulseForce: 5
   inverse: 0
   movingDirection: 1
 --- !u!61 &7581400334939288884
