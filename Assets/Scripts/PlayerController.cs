@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed = 7f; // maximum speed the object can reach
     private float currentSpeed = 3f; // the Current speed of the object
     public static PlayerController sharedInstance;
-
+    public bool isTeleported = false;
     #endregion
 
     private void Awake()
