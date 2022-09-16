@@ -44,14 +44,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Horizontal"))
         {
             Move();
-            Debug.Log("Move");
-            Debug.Log("rb.velocity.x: " + rb.velocity.x);
         }
         else if (Input.GetButtonUp("Horizontal"))
         {
-            Debug.Log("STOP!");
             Stop();
-            Debug.Log("rb.velocity.x: " + rb.velocity.x);
         }
 
         Flip();
