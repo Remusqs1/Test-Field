@@ -2,99 +2,108 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
-    #region Serialize Fields
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
-    #endregion
-
     #region Private variables
-    private float horizontal;
-    private bool isFacingRight = true;
+    Rigidbody2D playerRigidbody;
     Animator animator;
+    CapsuleCollider2D playerBoxCollider;
+    bool facingRight = true;
+    float originalSpeed;
+    [SerializeField] public LayerMask groundMask;
     #endregion
 
-    #region Public variables
-    public float speed = 6f;
-    public float jumpingPower = 7.5f;
+    #region public variables
+    public float jumpForce = 6.5f;
+    public float acceleration = 0f; // how much you want object to accelerate 
+    public float maxSpeed = 7f; // maximum speed the object can reach
+    private float currentSpeed = 3f; // the Current speed of the object
+    public static PlayerController sharedInstance;
     public bool isTeleported = false;
     #endregion
 
     private void Awake()
     {
+        if (sharedInstance == null) sharedInstance = this; 
+        playerRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        playerBoxCollider = GetComponent<CapsuleCollider2D>();
+        originalSpeed = currentSpeed;
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
     void Update()
     {
-        horizontal = Input.GetAxisRaw("Horizontal");
-
-        if (Input.GetButtonDown("Jump") && IsGrounded())
-        {
-            Jump();
-        }
-
-        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-        }
-
-        //TODO Bug, if change of horizontal button is too fast, player stops and don't start to move till button down again
-        if (Input.GetButtonDown("Horizontal"))
+        if (isTouchingTheGround() && Input.GetButtonDown("Jump")) Jump();
+        if (Input.GetButton("Horizontal"))
         {
             Move();
+            currentSpeed += acceleration * Time.deltaTime;
+            if (currentSpeed > maxSpeed)
+            {
+                currentSpeed = maxSpeed;
+            }
         }
-        else if (Input.GetButtonUp("Horizontal"))
+        else
         {
-            Stop();
+            currentSpeed -= (acceleration * acceleration) * Time.deltaTime;
+            if (currentSpeed < originalSpeed)
+            {
+                currentSpeed = originalSpeed;
+            }
         }
-
-        Flip();
-        animator.SetBool("isJumping", !IsGrounded());
+        animator.SetBool("isJumping", !isTouchingTheGround());
     }
 
     private void FixedUpdate()
     {
-        if (rb.velocity.x == 0) animator.SetBool("isRunning", false);
-    }
-
-    private bool IsGrounded()
-    {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-    }
-
-    private void Flip()
-    {
-        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
-        {
-            isFacingRight = !isFacingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
-        }
+        if (playerRigidbody.velocity.x == 0) animator.SetBool("isRunning", false);
     }
 
     void Jump()
     {
         animator.SetBool("isJumping", true);
-        rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+        playerRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 
     void Move()
     {
-        rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        /*
+        Vector3 horizontalMomentum = Input.GetAxisRaw("Horizontal") * Vector3.right * currentSpeed;
+        playerRigidbody.velocity = new Vector2(horizontalMomentum.x, playerRigidbody.velocity.y);
+        */
 
-        if (rb.velocity.x != 0) animator.SetBool("isRunning", true);
-        else animator.SetBool("isRunning", false);
-    }
-    void Stop()
-    {
-        if (rb.velocity.x != 0)
+        playerRigidbody.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * currentSpeed, playerRigidbody.velocity.y);
+
+
+        if (playerRigidbody.velocity.x != 0) animator.SetBool("isRunning", true);
+        else
         {
-            rb.velocity = new Vector2(horizontal * 0.05f, rb.velocity.y);
+            animator.SetBool("isRunning", false);
+
         }
-        animator.SetBool("isRunning", false);
+        if (Input.GetAxisRaw("Horizontal") > 0 && !facingRight || Input.GetAxisRaw("Horizontal") < 0 && facingRight) Flip();
+    }
+
+    bool isTouchingTheGround()
+    {
+        var extraHeight = 0.1f;
+        RaycastHit2D raycast = Physics2D.Raycast(playerBoxCollider.bounds.center, Vector2.down, playerBoxCollider.bounds.extents.y + extraHeight, groundMask);
+        Color raycastColor = raycast.collider != null ? Color.green : Color.red;
+        Debug.DrawRay(playerBoxCollider.bounds.center, Vector2.down * (playerBoxCollider.bounds.extents.y + extraHeight), raycastColor);
+        return raycast.collider != null;
+    }
+
+    void Flip()
+    {
+        Vector3 currectScale = gameObject.transform.localScale;
+        currectScale.x *= -1;
+        gameObject.transform.localScale = currectScale;
+        facingRight = !facingRight;
     }
 
 }
