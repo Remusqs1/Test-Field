@@ -7,6 +7,14 @@ TagManager:
   - Cherry
   - Cherry_Clone
   - Trampolin_Clone
+  - Melon
+  - Melon_Clone
+  - Pineapple
+  - Pineapple_Clone
+  - Item
+  - Box
+  - Box_Clone
+  - Trampolin
   layers:
   - Default
   - TransparentFX
