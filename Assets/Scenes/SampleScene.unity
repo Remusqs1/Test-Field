@@ -2644,11 +2644,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1823285351383247424, guid: eee6cd7f1bb919141bd43a1fe7d7bc39, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 60.57
+      value: 66.11
       objectReference: {fileID: 0}
     - target: {fileID: 1823285351383247424, guid: eee6cd7f1bb919141bd43a1fe7d7bc39, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.7
+      value: -7.23
       objectReference: {fileID: 0}
     - target: {fileID: 1823285351383247424, guid: eee6cd7f1bb919141bd43a1fe7d7bc39, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2685,10 +2685,6 @@ PrefabInstance:
     - target: {fileID: 1823285351383247426, guid: eee6cd7f1bb919141bd43a1fe7d7bc39, type: 3}
       propertyPath: delayTime
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1823285351383247426, guid: eee6cd7f1bb919141bd43a1fe7d7bc39, type: 3}
-      propertyPath: spriteRenderers.Array.size
-      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1823285351383247426, guid: eee6cd7f1bb919141bd43a1fe7d7bc39, type: 3}
       propertyPath: spriteRenderers.Array.data[5]
