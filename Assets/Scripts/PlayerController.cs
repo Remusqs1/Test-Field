@@ -2,20 +2,24 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+
+    #region Serialize Fields
+    [SerializeField] public LayerMask groundMask;
+    #endregion
+
     #region Private variables
     Rigidbody2D playerRigidbody;
     Animator animator;
     CapsuleCollider2D playerBoxCollider;
     bool facingRight = true;
     float originalSpeed;
-    [SerializeField] public LayerMask groundMask;
+    float currentSpeed = 3f; // the Current speed of the object
     #endregion
 
     #region public variables
     public float jumpForce = 6.5f;
     public float acceleration = 0f; // how much you want object to accelerate 
     public float maxSpeed = 7f; // maximum speed the object can reach
-    private float currentSpeed = 3f; // the Current speed of the object
     public static PlayerController sharedInstance;
     public bool isTeleported = false;
     #endregion
