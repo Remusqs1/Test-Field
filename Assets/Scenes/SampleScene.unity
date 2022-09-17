@@ -1124,7 +1124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameObjectItem: {fileID: 0}
   spawnOption: 0
-  spawner: {fileID: 8589190236039050894, guid: 2d7a042f07993ad499d8a1eadd3b24e5, type: 3}
+  spawner: {fileID: 930672069}
   itemList:
   - {fileID: 1992184379772845307, guid: 4998096663e617448a2d61d6ee511a63, type: 3}
   - {fileID: 8589190236039050894, guid: 2d7a042f07993ad499d8a1eadd3b24e5, type: 3}

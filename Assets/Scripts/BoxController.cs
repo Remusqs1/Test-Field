@@ -3,11 +3,11 @@ using UnityEngine;
 public class BoxController : MonoBehaviour
 {
     Animator animator;
+    AudioSource audioSource;
 
     void Awake()
     {
         animator = GetComponent<Animator>();
-
     }
 
     // Start is called before the first frame update
@@ -27,6 +27,8 @@ public class BoxController : MonoBehaviour
         if (collision.tag == "Player")
         {
             animator.SetBool("isHitted", true);
+            audioSource = GetComponent<AudioSource>();
+            audioSource.Play();
         }
     }
 
