@@ -66,6 +66,8 @@
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Alternative MoveController.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\HitArea.cs" />
+    <Compile Include="Assets\Scripts\ChangeScene.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -61,10 +61,11 @@ public class PlayerController : MonoBehaviour
                 isDoubleJumping = !isDoubleJumping;
             }
         }
-        if (Input.GetButtonDown("Horizontal"))
+        if (Input.GetButton("Horizontal"))
         {
             Move();
             currentSpeed += acceleration * Time.deltaTime;
+
             if (currentSpeed > maxSpeed)
             {
                 currentSpeed = maxSpeed;
@@ -107,7 +108,6 @@ public class PlayerController : MonoBehaviour
         */
 
         playerRigidbody.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * currentSpeed, playerRigidbody.velocity.y);
-
         if (playerRigidbody.velocity.x != 0) animator.SetBool("isRunning", true);
         else
         {
