@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -5,6 +6,7 @@ public class PlayerController : MonoBehaviour
 
     #region Serialize Fields
     [SerializeField] public LayerMask groundMask;
+    [SerializeField] private TrailRenderer tr;
     #endregion
 
     #region Private variables
@@ -14,6 +16,13 @@ public class PlayerController : MonoBehaviour
     bool facingRight = true;
     float originalSpeed;
     float currentSpeed = 3f; // the Current speed of the object
+    bool isDoubleJumping = false;
+
+    bool canDash = true;
+    bool isDashing = false;
+    float dashingPower = 3f;
+    float dashingTime = 0.2f;
+    float dashingCoolDown = 1f;
     #endregion
 
     #region public variables
@@ -26,7 +35,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        if (sharedInstance == null) sharedInstance = this; 
+        if (sharedInstance == null) sharedInstance = this;
         playerRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerBoxCollider = GetComponent<CapsuleCollider2D>();
@@ -42,8 +51,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isTouchingTheGround() && Input.GetButtonDown("Jump")) Jump();
-        if (Input.GetButton("Horizontal"))
+        if (isDashing) return;
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (isTouchingTheGround() || isDoubleJumping)
+            {
+                Jump();
+                isDoubleJumping = !isDoubleJumping;
+            }
+        }
+        if (Input.GetButtonDown("Horizontal"))
         {
             Move();
             currentSpeed += acceleration * Time.deltaTime;
@@ -61,10 +79,17 @@ public class PlayerController : MonoBehaviour
             }
         }
         animator.SetBool("isJumping", !isTouchingTheGround());
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        {
+            StartCoroutine(Dash());
+        }
+
     }
 
     private void FixedUpdate()
     {
+        if (isDashing) return;
         if (playerRigidbody.velocity.x == 0) animator.SetBool("isRunning", false);
     }
 
@@ -82,7 +107,6 @@ public class PlayerController : MonoBehaviour
         */
 
         playerRigidbody.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * currentSpeed, playerRigidbody.velocity.y);
-
 
         if (playerRigidbody.velocity.x != 0) animator.SetBool("isRunning", true);
         else
@@ -108,6 +132,24 @@ public class PlayerController : MonoBehaviour
         currectScale.x *= -1;
         gameObject.transform.localScale = currectScale;
         facingRight = !facingRight;
+    }
+
+    //coroutine
+    IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float originalGravity = playerRigidbody.gravityScale;
+        playerRigidbody.gravityScale = 0;
+        playerRigidbody.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
+        tr.emitting = true;
+        yield return new WaitForSeconds(dashingTime);
+
+        tr.emitting = false;
+        playerRigidbody.gravityScale = originalGravity;
+        isDashing = false;
+        yield return new WaitForSeconds(dashingCoolDown);
+        canDash = true;
     }
 
 }
