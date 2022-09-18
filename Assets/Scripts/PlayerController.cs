@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     bool facingRight = true;
     float originalSpeed;
     float currentSpeed = 3f; // the Current speed of the object
+    bool isDoubleJumping = false;
     #endregion
 
     #region public variables
@@ -42,7 +43,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isTouchingTheGround() && Input.GetButtonDown("Jump")) Jump();
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (isTouchingTheGround() || isDoubleJumping)
+            {
+                Jump();
+                isDoubleJumping = !isDoubleJumping;
+            }
+        }
         if (Input.GetButton("Horizontal"))
         {
             Move();
